@@ -5,9 +5,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +17,6 @@ public class TemaController {
 
     @Autowired
     private GestionTema gestionTema;
-    @Autowired
-    private ConsultaTemas consultaTemas;
     @Autowired
     private TemaRepository temaRepository;
 
@@ -44,10 +40,11 @@ public class TemaController {
 
     @GetMapping("/filtro")
     public ResponseEntity<Page<DatosDetalleTema>> listaTemasPorCursoYAnio(
-            @PageableDefault(size = 5, page = 1) Pageable paginacion,
-            @RequestBody @Valid DatosConsultaTemas datosConsultaTemas) {
-        return ResponseEntity.ok(consultaTemas.consultarTemasPorCursoAnio(
-                paginacion, datosConsultaTemas));
+            @PageableDefault(size = 5) Pageable paginacion,
+            @RequestBody @Valid DatosConsultaTemas
+            datosConsultaTemas) {
+        return ResponseEntity.ok(gestionTema
+                .consultarTemasPorCursoAnio(paginacion, datosConsultaTemas));
     }
 
     @GetMapping("/{id}")
